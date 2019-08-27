@@ -49,6 +49,11 @@ class Groups
         $this->groupName = $groupName;
         return $this;
     }
+
+    /**
+     * @ORM\OneToMany(targetEntity="Event", mappedBy="group")
+     */
+    private $events;
     /**
      * @var User[]
      * @ORM\ManyToMany(targetEntity="User", mappedBy="groups")
@@ -70,12 +75,37 @@ class Groups
         $this->users = $users;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEvents()
+    {
+        return $this->events;
+    }
+
+    /**
+     * @param mixed $events
+     * @return Groups
+     */
+    public function setEvents($events)
+    {
+        $this->events = $events;
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->groupName;
+    }
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
     /**
-     * @param User $users
+     * @param User $user
      */
     public function addUser(User $user)
     {
@@ -86,7 +116,7 @@ class Groups
         $user->addUserGroup($this);
     }
     /**
-     * @param User $users
+     * @param User $user
      */
     public function removeUser(User $user)
     {

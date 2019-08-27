@@ -6,21 +6,21 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ShoppingListType extends AbstractType
+class EventType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name')->add('products');
+        $builder->add('name')->add('startDate')->add('endDate')->add('description')->add('budget')->add('group')->add('shoppingList');
     }/**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\ShoppingList'
+            'data_class' => 'AppBundle\Entity\Event'
         ));
     }
 
@@ -29,7 +29,7 @@ class ShoppingListType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'appbundle_shoppinglist';
+        return 'appbundle_event';
     }
 
 

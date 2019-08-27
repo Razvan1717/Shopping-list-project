@@ -31,6 +31,12 @@
                     {% endfor %}
                 </td>
             </tr>
+            <tr>
+                <th>Event</th>
+                {% for event in group.events %}
+                    <td><a href="../event/{{ event.id }}"> {{ event.name }}</a></td>
+                {% endfor %}
+            </tr>
         </tbody>
     </table>
 

@@ -22,6 +22,29 @@ class ShoppingList
      */
     private $id;
 
+    /**
+     * @var string
+     * @ORM\Column(name="name", type="string")
+     */
+    private $name;
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     * @return ShoppingList
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
 
     /**
      * Get id.
@@ -31,6 +54,29 @@ class ShoppingList
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @ORM\OneToMany(targetEntity="Event", mappedBy="shoppingList")
+     */
+    private $events;
+
+    /**
+     * @return mixed
+     */
+    public function getEvents()
+    {
+        return $this->events;
+    }
+
+    /**
+     * @param mixed $events
+     * @return ShoppingList
+     */
+    public function setEvents($events)
+    {
+        $this->events = $events;
+        return $this;
     }
 
     /**
@@ -59,6 +105,7 @@ class ShoppingList
     public function __construct()
     {
         $this->products = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
     /**
      * @param Product $product
@@ -81,5 +128,13 @@ class ShoppingList
         }
         $this->products->removeElement($product);
         $product->removeShoppingList($this);
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
 }

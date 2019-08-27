@@ -20,7 +20,7 @@
             <tr>
                 <th>Group</th>
                 {% for group in user.groups %}
-                <td>{{ group.groupName }}</td>
+                    <td><a href="groups/{{ group.id }}"> {{ group.groupName }}</a></td>
                 {% endfor %}
             </tr>
         </tbody>
