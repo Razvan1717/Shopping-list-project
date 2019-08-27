@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Shoppinglist</h1>
+
+    <table>
+        <thead>
+        <tr>
+        Products
+        </tr>
+        <tr>
+            altceva
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ shoppingList.id }}</td>
+            </tr>
+            <tr>
+                <th>Products: </th>
+                <td>
+                {% for product in shoppingList.products %}
+                    <ul><li>Item: {{ product.item }}</li>
+                       <li>Qty: {{ product.quantity }} </li>
+                        <li> Price: {{ product.price }} </li>
+                    <li><a href="../product/{{ product.id }}">Link to product info</a></li></ul>
+                {% endfor %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('shoppinglist_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('shoppinglist_edit', { 'id': shoppingList.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}
