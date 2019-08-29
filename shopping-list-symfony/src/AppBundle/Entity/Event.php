@@ -58,15 +58,57 @@ class Event
     private $budget;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Groups")
-     * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
-     */
-    private $group;
-    /**
-     * @ORM\ManyToOne(targetEntity="ShoppingList")
-     * @ORM\JoinColumn(name="ShoppingList_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="ShoppingList")
+     * @ORM\JoinColumn(name="shoppingList_id", referencedColumnName="id")
      */
     private $shoppingList;
+
+    /**
+     * @var User[]
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="events")
+     */
+    protected $users;
+
+    /**
+     * @param User $user
+     */
+    public function addEvent(User $user)
+    {
+        if ($this->users->contains($user)) {
+            return;
+        }
+        $this->users->add($user);
+        $user->addUserEvent($this);
+    }
+    /**
+     * @param User $user
+     */
+    public function removeEvent(User $user)
+    {
+        if (!$this->users->contains($user)) {
+            return;
+        }
+        $this->users->removeElement($user);
+        $user->removeUserEvent($this);
+    }
+    /**
+     * @return User[]
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * @param User[] $users
+     * @return Event
+     */
+    public function setUsers($users)
+    {
+        $this->users = $users;
+        return $this;
+    }
+
 
     /**
      * @return mixed
@@ -86,24 +128,6 @@ class Event
         return $this;
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getGroup()
-    {
-        return $this->group;
-    }
-
-    /**
-     * @param mixed $group
-     * @return Event
-     */
-    public function setGroup($group)
-    {
-        $this->group = $group;
-        return $this;
-    }
 
     /**
      * Get id.

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,8 +14,16 @@ class ProductType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('item')->add('quantity')->add('price')->add('description');
-    }/**
+        $builder->add('item')
+            ->add('quantity')
+            ->add('price')
+            ->add('description')
+        ->add('shoppingList', EntityType::class, [
+            'class' => 'AppBundle:ShoppingList',
+            'choice_label' => 'name'
+        ]);
+    }
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)

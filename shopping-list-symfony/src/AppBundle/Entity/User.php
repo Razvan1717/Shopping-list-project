@@ -18,53 +18,83 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Event", inversedBy="users")
+     * @ORM\JoinTable(name="users_events")
+     */
+    private $events;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Product", mappedBy="user")
+     */
+    private $products;
+
+
     public function __construct()
     {
         parent::__construct();
-        $this->groups = new ArrayCollection();
+        $this->events = new ArrayCollection();
+        $this->products = new ArrayCollection();
+
         // your own logic
     }
     /**
-     * @ORM\ManyToMany(targetEntity="Groups", inversedBy="users")
-     * @ORM\JoinTable(name="users_groups")
+     * @param Event $event
      */
-    protected $groups;
+    public function addUserEvent(Event $event)
+    {
+        if ($this->events->contains($event)) {
+            return;
+        }
+        $this->events->add($event);
+        $event->addEvent($this);
+    }
+    /**
+     * @param Event $event
+     */
+    public function removeUserEvent(Event $event)
+    {
+        if (!$this->events->contains($event)) {
+            return;
+        }
+        $this->events->removeElement($event);
+        $event->removeEvent($this);
+    }
     /**
      * @return mixed
      */
-    public function getGroups()
+    public function getEvents()
     {
-        return $this->groups;
+        return $this->events;
     }
+
     /**
-     * @param mixed $groups
+     * @param mixed $events
      * @return User
      */
-    public function setGroups($groups)
+    public function setEvents($events)
     {
-        $this->groups = $groups;
+        $this->events = $events;
         return $this;
     }
+
     /**
-     * @param Groups $group
+     * @return mixed
      */
-    public function addUserGroup(Groups $group)
+    public function getProducts()
     {
-        if ($this->groups->contains($group)) {
-            return;
-        }
-        $this->groups->add($group);
-        $group->addUser($this);
+        return $this->products;
     }
+
     /**
-     * @param Groups $group
+     * @param mixed $products
+     * @return User
      */
-    public function removeUserGroup(Groups $group)
+    public function setProducts($products)
     {
-        if (!$this->groups->contains($group)) {
-            return;
-        }
-        $this->groups->removeElement($group);
-        $group->removeUser($this);
+        $this->products = $products;
+        return $this;
     }
+
 }

@@ -2,7 +2,6 @@
 
 {% block body %}
     <h1>Shoppinglist</h1>
-
     <table>
         <tbody>
             <tr>
@@ -20,20 +19,35 @@
                     <ul><li>Item: {{ product.item }}</li>
                        <li>Qty: {{ product.quantity }} </li>
                         <li> Price: {{ product.price }} </li>
+                        <li> Add by: {{ product.user }} </li>
                     <li><a href="../product/{{ product.id }}">Link to product info</a></li></ul>
                 {% endfor %}
+                    <li><a href="../product/new">Add new product</a></li>
                 </td>
             </tr>
             <tr>
                 <th>Event</th>
                 <td>
-                    {% for event in shoppingList.events %}
+                    {% for event in shoppingList.event %}
                         <ul>
                             <li><a href="../event/{{ event.id }}"> {{ event.name }}</a></li>
                         </ul>
                     {% endfor %}
+                    <li><a href="../event">See all events</a></li>
                 </td>
-            </tr>
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>Users</th>#}
+{#                <td>#}
+{#                {% for event in shoppingList.events %}#}
+{#                    {% for users in event.users %}#}
+{#                        {% if users.username == app.user.username %}#}
+{#                        <li>{{ users.username }}</li>#}
+{#                        {% endif %}#}
+{#                    {% endfor %}#}
+{#                    {% endfor %}#}
+{#                </td>#}
+{#            </tr>#}
         </tbody>
     </table>
 

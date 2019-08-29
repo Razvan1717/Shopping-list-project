@@ -7,6 +7,7 @@
         <thead>
             <tr>
                 <th>Id</th>
+                <th>Name</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -14,6 +15,7 @@
         {% for shoppingList in shoppingLists %}
             <tr>
                 <td><a href="{{ path('shoppinglist_show', { 'id': shoppingList.id }) }}">{{ shoppingList.id }}</a></td>
+                <td>{{ shoppingList.name }}</td>
                 <td>
                     <ul>
                         <li>

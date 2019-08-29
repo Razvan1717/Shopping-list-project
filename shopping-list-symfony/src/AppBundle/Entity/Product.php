@@ -55,31 +55,52 @@ class Product
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity="ShoppingList", inversedBy="products")
-     * @ORM\JoinTable(name="products_lists")
+     * @ORM\ManyToOne(targetEntity="ShoppingList", inversedBy="products")
+     * @ORM\JoinColumn(name="products_list", referencedColumnName="id")
      */
-    private $shoppingLists;
+    private $shoppingList;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
 
     /**
      * @return mixed
      */
-    public function getShoppingLists()
+    public function getShoppingList()
     {
-        return $this->shoppingLists;
+        return $this->shoppingList;
     }
 
     /**
-     * @param mixed $shoppingLists
+     * @param mixed $shoppingList
      */
-    public function setShoppingLists($shoppingLists)
+    public function setShoppingList($shoppingList)
     {
-        $this->shoppingLists = $shoppingLists;
+        $this->shoppingList = $shoppingList;
     }
 
-    public function __construct()
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
     {
-        $this->shoppingLists = new ArrayCollection();
+        return $this->user;
     }
+
+    /**
+     * @param mixed $user
+     * @return Product
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
+    }
+
 
     /**
      * Get id.
@@ -176,28 +197,28 @@ class Product
 
         return $this;
     }
-    /**
-     * @param ShoppingList $shoppingList
-     */
-    public function addShoppingList(ShoppingList $shoppingList)
-    {
-        if ($this->shoppingLists->contains($shoppingList)) {
-            return;
-        }
-        $this->shoppingLists->add($shoppingList);
-        $shoppingList->addProduct($this);
-    }
-    /**
-     * @param ShoppingList $shoppingList
-     */
-    public function removeShoppingList(ShoppingList $shoppingList)
-    {
-        if (!$this->shoppingLists->contains($shoppingList)) {
-            return;
-        }
-        $this->shoppingLists->removeElement($shoppingList);
-        $shoppingList->removeProduct($this);
-    }
+//    /**
+//     * @param ShoppingList $shoppingList
+//     */
+//    public function addShoppingList(ShoppingList $shoppingList)
+//    {
+//        if ($this->shoppingLists->contains($shoppingList)) {
+//            return;
+//        }
+//        $this->shoppingLists->add($shoppingList);
+//        $shoppingList->addProduct($this);
+//    }
+//    /**
+//     * @param ShoppingList $shoppingList
+//     */
+//    public function removeShoppingList(ShoppingList $shoppingList)
+//    {
+//        if (!$this->shoppingLists->contains($shoppingList)) {
+//            return;
+//        }
+//        $this->shoppingLists->removeElement($shoppingList);
+//        $shoppingList->removeProduct($this);
+//    }
     /**
      * Get description.
      *

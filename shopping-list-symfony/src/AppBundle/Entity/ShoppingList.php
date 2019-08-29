@@ -29,6 +29,12 @@ class ShoppingList
     private $name;
 
     /**
+     * @var Product[]
+     * @ORM\OneToMany(targetEntity="Product", mappedBy="shoppingList")
+     */
+    private $products;
+
+    /**
      * @return string
      */
     public function getName()
@@ -57,33 +63,27 @@ class ShoppingList
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="Event", mappedBy="shoppingList")
+     * @ORM\OneToOne(targetEntity="Event", mappedBy="shoppingList")
      */
-    private $events;
+    private $event;
 
     /**
      * @return mixed
      */
-    public function getEvents()
+    public function getEvent()
     {
-        return $this->events;
+        return $this->event;
     }
 
     /**
-     * @param mixed $events
+     * @param mixed $event
      * @return ShoppingList
      */
-    public function setEvents($events)
+    public function setEvent($event)
     {
-        $this->events = $events;
+        $this->event = $event;
         return $this;
     }
-
-    /**
-     * @var Product[]
-     * @ORM\ManyToMany(targetEntity="Product", mappedBy="shoppingLists")
-     */
-    private $products;
 
     /**
      * @return Product[]
@@ -105,30 +105,29 @@ class ShoppingList
     public function __construct()
     {
         $this->products = new ArrayCollection();
-        $this->events = new ArrayCollection();
     }
-    /**
-     * @param Product $product
-     */
-    public function addProduct(Product $product)
-    {
-        if ($this->products->contains($product)) {
-            return;
-        }
-        $this->products->add($product);
-        $product->addShoppingList($this);
-    }
-    /**
-     * @param Product $product
-     */
-    public function removeProduct(Product $product)
-    {
-        if (!$this->products->contains($product)) {
-            return;
-        }
-        $this->products->removeElement($product);
-        $product->removeShoppingList($this);
-    }
+//    /**
+//     * @param Product $product
+//     */
+//    public function addProduct(Product $product)
+//    {
+//        if ($this->products->contains($product)) {
+//            return;
+//        }
+//        $this->products->add($product);
+//        $product->addShoppingList($this);
+//    }
+//    /**
+//     * @param Product $product
+//     */
+//    public function removeProduct(Product $product)
+//    {
+//        if (!$this->products->contains($product)) {
+//            return;
+//        }
+//        $this->products->removeElement($product);
+//        $product->removeShoppingList($this);
+//    }
 
     /**
      * @return string

@@ -3,14 +3,18 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Product;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Product controller.
  *
  * @Route("product")
+ * @Security("has_role('ROLE_USER')")
  */
 class ProductController extends Controller
 {
@@ -37,18 +41,31 @@ class ProductController extends Controller
      * @Route("/new", name="product_new")
      * @Method({"GET", "POST"})
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, UserInterface $user)
     {
+        $em = $this->getDoctrine()->getManager();
+
         $product = new Product();
         $form = $this->createForm('AppBundle\Form\ProductType', $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($product);
-            $em->flush();
+            $shoppinglist = $product->getShoppingList();
+            $event = $shoppinglist->getEvent();
+            $users = $event->getUsers();
 
-            return $this->redirectToRoute('product_show', array('id' => $product->getId()));
+            if ($users->contains($user)) {
+                $product = $form->getData();
+                $product->setUser($user);
+                $em->persist($product);
+                $em->flush();
+
+                return $this->redirectToRoute('product_show', array('id' => $product->getId()));
+            }
+            else{
+                throw $this->createAccessDeniedException("You can't add products in a event you don't belong");
+//                return $this->redirectToRoute('/');
+            }
         }
 
         return $this->render('product/new.html.twig', array(
@@ -79,14 +96,17 @@ class ProductController extends Controller
      * @Route("/{id}/edit", name="product_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, Product $product)
+    public function editAction(Request $request, Product $product, UserInterface $user)
     {
         $deleteForm = $this->createDeleteForm($product);
         $editForm = $this->createForm('AppBundle\Form\ProductType', $product);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $em = $this->getDoctrine()->getManager();
+            $product->setUser($user);
+            $em->persist($product);
+            $em->flush();
 
             return $this->redirectToRoute('product_edit', array('id' => $product->getId()));
         }

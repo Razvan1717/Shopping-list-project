@@ -3,14 +3,18 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Event;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Event controller.
  *
  * @Route("event")
+ * @Security("has_role('ROLE_USER')")
  */
 class EventController extends Controller
 {
@@ -39,12 +43,19 @@ class EventController extends Controller
      */
     public function newAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+
         $event = new Event();
         $form = $this->createForm('AppBundle\Form\EventType', $event);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            /** @var Event $event */
+            $event = $form->getData();
+            foreach($event->getUsers() as $selectedUser){
+                $selectedUser->addUserEvent($event);
+                $em->persist($selectedUser);
+            }
             $em->persist($event);
             $em->flush();
 
@@ -60,17 +71,30 @@ class EventController extends Controller
     /**
      * Finds and displays a event entity.
      *
-     * @Route("/{id}", name="event_show")
+     * @Route("/{id}", name="event_show", requirements={"id"="\d+"} )
      * @Method("GET")
+     * @Security("has_role('ROLE_USER')")
      */
-    public function showAction(Event $event)
+    public function showAction(Event $event, UserInterface $user)
     {
         $deleteForm = $this->createDeleteForm($event);
+        $ok = 0;
+       foreach ($event->getUsers() as $usr){
+           if($user->getUsername() === $usr->getUsername()){
+               $ok = 1;
+           }
+       }
 
-        return $this->render('event/show.html.twig', array(
-            'event' => $event,
-            'delete_form' => $deleteForm->createView(),
-        ));
+        if( $ok == 1) {
+            return $this->render('event/show.html.twig', array(
+                'event' => $event,
+                'user' => $user,
+                'delete_form' => $deleteForm->createView(),
+            ));
+        }
+        else {
+            throw $this->createAccessDeniedException("You don't belong to this event");
+        }
     }
 
     /**
@@ -81,12 +105,20 @@ class EventController extends Controller
      */
     public function editAction(Request $request, Event $event)
     {
+        $em = $this->getDoctrine()->getManager();
         $deleteForm = $this->createDeleteForm($event);
         $editForm = $this->createForm('AppBundle\Form\EventType', $event);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            /** @var Event $event */
+            $event = $editForm->getData();
+            foreach($event->getUsers() as $selectedUser){
+                $selectedUser->addUserEvent($event);
+                $em->persist($selectedUser);
+            }
+            $em->persist($event);
+            $em->flush();
 
             return $this->redirectToRoute('event_edit', array('id' => $event->getId()));
         }

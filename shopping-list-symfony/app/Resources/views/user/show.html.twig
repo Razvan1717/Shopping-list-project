@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
     <h1>User</h1>
 
     <table>
@@ -17,12 +18,12 @@
                 <th>Email</th>
                 <td>{{ user.email }}</td>
             </tr>
-            <tr>
-                <th>Group</th>
-                {% for group in user.groups %}
-                    <td><a href="groups/{{ group.id }}"> {{ group.groupName }}</a></td>
-                {% endfor %}
-            </tr>
+{#            <tr>#}
+{#                <th>Group</th>#}
+{#                {% for group in user.groups %}#}
+{#                    <td><a href="../groups/{{ group.id }}"> {{ group.groupName }}</a></td>#}
+{#                {% endfor %}#}
+{#            </tr>#}
         </tbody>
     </table>
 
@@ -30,8 +31,9 @@
         <li>
             <a href="{{ path('user_index') }}">Back to the list</a>
         </li>
+
         <li>
-            <a href="{{ path('user_edit', { 'id': user.id }) }}">Edit</a>
+            <a href="../../profile/edit">Real Edit</a>
         </li>
         <li>
             {{ form_start(delete_form) }}

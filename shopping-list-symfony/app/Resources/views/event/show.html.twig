@@ -2,7 +2,6 @@
 
 {% block body %}
     <h1>Event</h1>
-
     <table>
         <tbody>
             <tr>
@@ -30,11 +29,13 @@
                 <td>{{ event.budget }}</td>
             </tr>
             <tr>
-                <th>Group</th>
-                {% if event.group %}
-                    <td><a href="../groups/{{ event.group.id }}">{{ event.group }}</a></td>
+                <th>Users</th>
+               <td> {% if event.users %}
+                    {% for users in event.users %}
+                   <li>{{ users.username }}</li>
+                    {% endfor %}
                 {%  else %}
-                {%  endif %}
+                {%  endif %}</td>
             </tr>
             <tr>
                 <th>Shopping List</th>
@@ -45,6 +46,7 @@
             </tr>
         </tbody>
     </table>
+
 
     <ul>
         <li>

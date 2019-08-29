@@ -3,14 +3,19 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\ShoppingList;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 
 /**
  * Shoppinglist controller.
  *
  * @Route("shoppinglist")
+ * @Security("has_role('ROLE_USER')")
  */
 class ShoppingListController extends Controller
 {
@@ -47,10 +52,10 @@ class ShoppingListController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var ShoppingList $shoppingList */
             $shoppingList = $form->getData();
-            foreach($shoppingList->getProducts() as $selectedProducts){
-                $selectedProducts->addShoppingList($shoppingList);
-                $em->persist($selectedProducts);
-            }
+//            foreach($shoppingList->getProducts() as $selectedProducts){
+//                $selectedProducts->addShoppingList($shoppingList);
+//                $em->persist($selectedProducts);
+//            }
             $em->persist($shoppingList);
             $em->flush();
 
@@ -68,12 +73,13 @@ class ShoppingListController extends Controller
      *
      * @Route("/{id}", name="shoppinglist_show", methods={"GET"})
      */
-    public function showAction(ShoppingList $shoppingList)
+    public function showAction(ShoppingList $shoppingList, UserInterface $user=null)
     {
         $deleteForm = $this->createDeleteForm($shoppingList);
 
         return $this->render('shoppinglist/show.html.twig', array(
             'shoppingList' => $shoppingList,
+            'user' => $user,
             'delete_form' => $deleteForm->createView(),
         ));
     }

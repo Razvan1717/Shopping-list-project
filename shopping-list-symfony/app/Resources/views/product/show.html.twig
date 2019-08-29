@@ -26,9 +26,13 @@
                 <td>{{ product.description }}</td>
             </tr>
             <tr>
-                <th>Shopping Lists: </th>
+                <th>Add by:</th>
+                <td>{{ product.user }}</td>
+            </tr>
+            <tr>
+                <th>Shopping List: </th>
                 <td>
-                    {% for list in product.shoppingLists %}
+                    {% for list in product.shoppingList %}
                         <ul><li>Id: {{ list.id }}</li>
                             <li><a href="../shoppinglist/{{ list.id }}">Link to shopping list info</a></li>
                         </ul>
