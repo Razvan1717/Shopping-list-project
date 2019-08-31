@@ -52,10 +52,7 @@ class ShoppingListController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var ShoppingList $shoppingList */
             $shoppingList = $form->getData();
-//            foreach($shoppingList->getProducts() as $selectedProducts){
-//                $selectedProducts->addShoppingList($shoppingList);
-//                $em->persist($selectedProducts);
-//            }
+            $shoppingList->getEvent()->setShoppingList($shoppingList);
             $em->persist($shoppingList);
             $em->flush();
 

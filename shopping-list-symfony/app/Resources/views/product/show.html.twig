@@ -32,11 +32,9 @@
             <tr>
                 <th>Shopping List: </th>
                 <td>
-                    {% for list in product.shoppingList %}
-                        <ul><li>Id: {{ list.id }}</li>
-                            <li><a href="../shoppinglist/{{ list.id }}">Link to shopping list info</a></li>
-                        </ul>
-                    {% endfor %}
+                    {% if product.shoppinglist %}
+                            <li><a href="../shoppinglist/{{ product.shoppinglist.id }}">{{ product.shoppinglist.name }}</a></li>
+                    {% endif %}
                 </td>
             </tr>
         </tbody>
