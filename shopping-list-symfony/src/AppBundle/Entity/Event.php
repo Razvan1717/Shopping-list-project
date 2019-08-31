@@ -58,7 +58,7 @@ class Event
     private $budget;
 
     /**
-     * @ORM\OneToOne(targetEntity="ShoppingList")
+     * @ORM\OneToOne(targetEntity="ShoppingList", inversedBy="event")
      * @ORM\JoinColumn(name="shoppingList_id", referencedColumnName="id")
      */
     private $shoppingList;
@@ -68,6 +68,11 @@ class Event
      * @ORM\ManyToMany(targetEntity="User", mappedBy="events")
      */
     protected $users;
+
+    public function __toString()
+    {
+        return $this->name;
+    }
 
     /**
      * @param User $user

@@ -19,6 +19,12 @@ class User extends BaseUser
      */
     protected $id;
 
+    /** @ORM\Column(name="facebook_id", type="string", length=255, nullable=true) */
+    protected $facebookId;
+
+    /** @ORM\Column(name="facebook_access_token", type="string", length=255, nullable=true) */
+    protected $facebookAccessToken;
+
     /**
      * @ORM\ManyToMany(targetEntity="Event", inversedBy="users")
      * @ORM\JoinTable(name="users_events")
@@ -94,6 +100,42 @@ class User extends BaseUser
     public function setProducts($products)
     {
         $this->products = $products;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacebookId()
+    {
+        return $this->facebookId;
+    }
+
+    /**
+     * @param mixed $facebookId
+     * @return User
+     */
+    public function setFacebookId($facebookId)
+    {
+        $this->facebookId = $facebookId;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacebookAccessToken()
+    {
+        return $this->facebookAccessToken;
+    }
+
+    /**
+     * @param mixed $facebookAccessToken
+     * @return User
+     */
+    public function setFacebookAccessToken($facebookAccessToken)
+    {
+        $this->facebookAccessToken = $facebookAccessToken;
         return $this;
     }
 

@@ -89,26 +89,28 @@ class ShoppingListController extends Controller
      *
      * @Route("/{id}/edit", name="shoppinglist_edit", methods={"GET", "POST"})
      */
-    public function editAction(Request $request, ShoppingList $shoppingList)
+    public function editAction(Request $request, ShoppingList $shoppingList, UserInterface $user)
     {
         $em = $this->getDoctrine()->getManager();
 
         $deleteForm = $this->createDeleteForm($shoppingList);
-        $editForm = $this->createForm('AppBundle\Form\ShoppingListType', $shoppingList);
+        $event = $shoppingList->getEvent();
+        if($event == null){
+            $editForm = $this->createForm('AppBundle\Form\ShoppingListType', $shoppingList);
+        }
+        else{
+            $editForm = $this->createForm('AppBundle\Form\ShoppingListWithoutEventType', $shoppingList);
+        }
         $editForm->handleRequest($request);
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            /** @var ShoppingList $shoppingList */
-            $shoppingList = $editForm->getData();
-            foreach($shoppingList->getProducts() as $selectedProducts) {
-                $selectedProducts->addShoppingList($shoppingList);
-                $em->persist($selectedProducts);
+            if ($editForm->isSubmitted() && $editForm->isValid()) {
+                $shoppingList = $editForm->getData();
+                //dump($shoppingList);die;
+                $shoppingList->getEvent()->setShoppingList($shoppingList);
+                $em->persist($shoppingList);
+                $em->flush();
+                return $this->redirectToRoute('shoppinglist_edit', array('id' => $shoppingList->getId()));
             }
-            $em->persist($shoppingList);
-            $em->flush();
-
-            return $this->redirectToRoute('shoppinglist_edit', array('id' => $shoppingList->getId()));
-        }
 
         return $this->render('shoppinglist/edit.html.twig', array(
             'shoppingList' => $shoppingList,

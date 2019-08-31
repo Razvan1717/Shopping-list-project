@@ -5,15 +5,23 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityRepository;
 
 class ShoppingListType extends AbstractType
 {
     /**
-     * {@inheritdoc}
+     * {@inheritdoc}s
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name')->add('products');
+        $builder->add('name')->add('event', EntityType::class, [
+            'class' => 'AppBundle:Event',
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('e')
+                    ->where('e.shoppingList IS  NULL');},
+            'choice_label' => 'name'
+        ]);
     }/**
      * {@inheritdoc}
      */

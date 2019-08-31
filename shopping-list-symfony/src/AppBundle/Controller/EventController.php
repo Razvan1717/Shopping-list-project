@@ -103,24 +103,36 @@ class EventController extends Controller
      * @Route("/{id}/edit", name="event_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, Event $event)
+    public function editAction(Request $request, Event $event, UserInterface $user)
     {
         $em = $this->getDoctrine()->getManager();
         $deleteForm = $this->createDeleteForm($event);
         $editForm = $this->createForm('AppBundle\Form\EventType', $event);
         $editForm->handleRequest($request);
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            /** @var Event $event */
-            $event = $editForm->getData();
-            foreach($event->getUsers() as $selectedUser){
-                $selectedUser->addUserEvent($event);
-                $em->persist($selectedUser);
+        $ok = 0;
+        foreach ($event->getUsers() as $usr){
+            if($user->getUsername() === $usr->getUsername()){
+                $ok = 1;
             }
-            $em->persist($event);
-            $em->flush();
+        }
 
-            return $this->redirectToRoute('event_edit', array('id' => $event->getId()));
+        if( $ok == 1) {
+            if ($editForm->isSubmitted() && $editForm->isValid()) {
+                /** @var Event $event */
+                $event = $editForm->getData();
+                foreach ($event->getUsers() as $selectedUser) {
+                    $selectedUser->addUserEvent($event);
+                    $em->persist($selectedUser);
+                }
+                $em->persist($event);
+                $em->flush();
+
+                return $this->redirectToRoute('event_edit', array('id' => $event->getId()));
+            }
+        }
+        else{
+            throw $this->createAccessDeniedException("You can't edit an event where you don't belong");
         }
 
         return $this->render('event/edit.html.twig', array(

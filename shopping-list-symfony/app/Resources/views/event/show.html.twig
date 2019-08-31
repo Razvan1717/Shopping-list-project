@@ -42,6 +42,7 @@
                 {% if event.shoppingList %}
                 <td><a href="../shoppinglist/{{ event.shoppingList.id }}"> {{ event.shoppingList }}</a></td>
                 {%  else %}
+                    <td><a href="../shoppinglist/new">Create shopping list</a></td>
                 {%  endif %}
             </tr>
         </tbody>

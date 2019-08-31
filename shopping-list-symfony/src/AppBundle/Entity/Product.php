@@ -61,7 +61,7 @@ class Product
     private $shoppingList;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="products")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
