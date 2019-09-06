@@ -30,7 +30,7 @@ security:
                     facebook:           "/login-oauth/check-facebook"
                 login_path:        /login-oauth
                 use_forward:       false
-                failure_path:      /loginz
+                failure_path:      /login
 
                 oauth_user_provider:
                     service: my_user_provider

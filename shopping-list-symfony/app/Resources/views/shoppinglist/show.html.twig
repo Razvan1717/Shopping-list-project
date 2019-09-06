@@ -28,10 +28,12 @@
             <tr>
                 <th>Event</th>
                 <td>
-                    {% if shoppingList.event.shoppinglist %}
+                    {% if shoppingList.event is null %}
+                        <li><a href="../event">See all events</a></li>
+                    {% endif %}
+
+                    {% if shoppingList.event.shoppingList %}
                             <li><a href="../event/{{ shoppingList.event.id }}"> {{ shoppingList.event.name }}</a></li>
-                        {% else %}
-                            <li><a href="../event">See all events</a></li>
                     {% endif %}
                 </td>
 {#            </tr>#}

@@ -46,7 +46,9 @@ class ProductController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $product = new Product();
+        
         $form = $this->createForm('AppBundle\Form\ProductType', $product);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -64,7 +66,6 @@ class ProductController extends Controller
             }
             else{
                 throw $this->createAccessDeniedException("You can't add products in a event you don't belong");
-//                return $this->redirectToRoute('/');
             }
         }
 
