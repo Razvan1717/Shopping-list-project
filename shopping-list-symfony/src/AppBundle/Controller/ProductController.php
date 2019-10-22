@@ -46,7 +46,7 @@ class ProductController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $product = new Product();
-        
+
         $form = $this->createForm('AppBundle\Form\ProductType', $product);
 
         $form->handleRequest($request);

@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Event;
+use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -160,6 +161,42 @@ class EventController extends Controller
         }
 
         return $this->redirectToRoute('event_index');
+    }
+    /**
+     * Deletes users from an event .
+     *
+     * @Route("/{id}/{user}", name="user_detele_from_event")
+     * @Method("DELETE")
+     */
+    public function deleteUserAction(Request $request, Event $event, User $user)
+    {
+       $em = $this->getDoctrine()->getManager();
+       $repo = $em->getRepository('AppBundle:User');
+       $myEvent = $em->getRepository('AppBundle:Event')->find($event);
+       $query = $repo->createQueryBuilder('u')
+           ->innerJoin('u.events', 'e')
+           ->where('e.id = :event_id')
+           ->andWhere('u.id = :user_id')
+           ->setParameter('user_id', $user)
+           ->setParameter('event_id', $event)
+           ->getQuery()->getResult();
+
+
+        foreach($query as $key=>$value){
+            if($value){
+                dump($value);
+            }
+            else{
+                echo 'nu';
+            }
+        }
+        die();
+           $myEvent->removeUser($query);
+           $em->persist($myEvent);
+           $em->flush();
+//       dump($query);
+die();
+//        return $this->redirectToRoute('event_show');
     }
 
     /**

@@ -88,13 +88,9 @@ class Event
     /**
      * @param User $user
      */
-    public function removeEvent(User $user)
+    public function removeUser(User $user)
     {
-        if (!$this->users->contains($user)) {
-            return;
-        }
         $this->users->removeElement($user);
-        $user->removeUserEvent($this);
     }
     /**
      * @return User[]
