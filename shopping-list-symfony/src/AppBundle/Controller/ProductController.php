@@ -59,6 +59,7 @@ class ProductController extends Controller
             if ($users->contains($user)) {
                 $product = $form->getData();
                 $product->setUser($user);
+                $product->setTotalPrice($product->getPrice() * $product->getQuantity());
                 $em->persist($product);
                 $em->flush();
 
@@ -106,10 +107,11 @@ class ProductController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $product->setUser($user);
+            $product->setTotalPrice($product->getPrice() * $product->getQuantity());
             $em->persist($product);
             $em->flush();
 
-            return $this->redirectToRoute('product_edit', array('id' => $product->getId()));
+            return $this->redirectToRoute('product_show', [ 'id' => $product->getId()]);
         }
 
         return $this->render('product/edit.html.twig', array(

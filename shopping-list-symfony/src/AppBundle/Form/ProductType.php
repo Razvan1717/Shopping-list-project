@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -22,6 +23,13 @@ class ProductType extends AbstractType
         ->add('shoppingList', EntityType::class, [
             'class' => 'AppBundle:ShoppingList',
             'choice_label' => 'name'
+        ])
+        ->add('status', ChoiceType::class, [
+
+        'choices' => [
+            'Not Bought' => 'not bought',
+            'Bought' => 'bought',
+        ],
         ]);
     }
     /**

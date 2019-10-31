@@ -48,6 +48,14 @@ class Product
     private $price;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="total_price", type="float")
+     */
+
+    private $totalPrice;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="description", type="text")
@@ -69,6 +77,47 @@ class Product
     /**
      * @return mixed
      */
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="string")
+     */
+    private $status;
+
+    /**
+     * @return float
+     */
+    public function getTotalPrice()
+    {
+        return $this->totalPrice;
+    }
+
+    /**
+     * @param mixed $totalPrice
+     */
+    public function setTotalPrice($totalPrice)
+    {
+        $this->totalPrice = $totalPrice;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
     public function getShoppingList()
     {
         return $this->shoppingList;

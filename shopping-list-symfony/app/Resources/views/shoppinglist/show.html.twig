@@ -18,8 +18,10 @@
                 {% for product in shoppingList.products %}
                     <ul><li>Item: {{ product.item }}</li>
                        <li>Qty: {{ product.quantity }} </li>
-                        <li> Price: {{ product.price }} </li>
+                        <li> Price per one: {{ product.price }} </li>
+                        <li> Total price: {{ product.totalPrice }} </li>
                         <li> Add by: {{ product.user }} </li>
+                        <li> Status: {{ product.status }}</li>
                     <li><a href="../product/{{ product.id }}">Link to product info</a></li></ul>
                 {% endfor %}
                     <li><a href="../product/new">Add new product</a></li>
@@ -34,21 +36,18 @@
 
                     {% if shoppingList.event.shoppingList %}
                             <li><a href="../event/{{ shoppingList.event.id }}"> {{ shoppingList.event.name }}</a></li>
+                        <li>Budget: {{ shoppingList.event.budget }}</li>
                     {% endif %}
                 </td>
-{#            </tr>#}
-{#            <tr>#}
-{#                <th>Users</th>#}
-{#                <td>#}
-{#                {% for event in shoppingList.events %}#}
-{#                    {% for users in event.users %}#}
-{#                        {% if users.username == app.user.username %}#}
-{#                        <li>{{ users.username }}</li>#}
-{#                        {% endif %}#}
-{#                    {% endfor %}#}
-{#                    {% endfor %}#}
-{#                </td>#}
-{#            </tr>#}
+            </tr>
+            <tr>
+                <th>Remaining money</th>
+                <td>
+                    <li>
+                        {{  shoppingList.event.budget - totalPrice }}
+                    </li>
+                </td>
+            </tr>
         </tbody>
     </table>
 

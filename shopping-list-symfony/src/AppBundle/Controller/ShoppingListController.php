@@ -74,7 +74,16 @@ class ShoppingListController extends Controller
     {
         $deleteForm = $this->createDeleteForm($shoppingList);
 
+        $prices = 0;
+        foreach ($shoppingList->getProducts() as $product ) {
+            if($product->getStatus() == 'bought') {
+                $prices += $product->getTotalPrice();
+            }
+        }
+
+
         return $this->render('shoppinglist/show.html.twig', array(
+            'totalPrice' => $prices,
             'shoppingList' => $shoppingList,
             'user' => $user,
             'delete_form' => $deleteForm->createView(),
