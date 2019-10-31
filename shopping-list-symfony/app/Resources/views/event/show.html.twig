@@ -32,7 +32,10 @@
                 <th>Users</th>
                <td> {% if event.users %}
                     {% for users in event.users %}
-                   <li>{{ users.username }}</li>
+                   <li>
+                       {{ users.username }}
+                       <p><a href="../event/{{ event.id}}/{{ users.id }}">(Delete this user from event)</a></p>
+                   </li>
                     {% endfor %}
                 {%  else %}
                 {%  endif %}</td>

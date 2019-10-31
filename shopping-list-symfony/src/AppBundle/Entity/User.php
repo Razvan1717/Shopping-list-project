@@ -43,29 +43,28 @@ class User extends BaseUser
         $this->events = new ArrayCollection();
         $this->products = new ArrayCollection();
 
-        // your own logic
     }
     /**
      * @param Event $event
      */
-    public function addUserEvent(Event $event)
+    public function addEvent(Event $event)
     {
         if ($this->events->contains($event)) {
             return;
         }
         $this->events->add($event);
-        $event->addEvent($this);
+        $event->addUser($this);
     }
     /**
      * @param Event $event
      */
-    public function removeUserEvent(Event $event)
+    public function removeEvent(Event $event)
     {
         if (!$this->events->contains($event)) {
             return;
         }
         $this->events->removeElement($event);
-        $event->removeEvent($this);
+        $event->removeUser($this);
     }
     /**
      * @return mixed

@@ -69,6 +69,12 @@ class Event
      */
     protected $users;
 
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+
+    }
+
     public function __toString()
     {
         return $this->name;
@@ -77,21 +83,27 @@ class Event
     /**
      * @param User $user
      */
-    public function addEvent(User $user)
+    public function addUser(User $user)
     {
         if ($this->users->contains($user)) {
             return;
         }
         $this->users->add($user);
-        $user->addUserEvent($this);
+        $user->addEvent($this);
     }
+
     /**
      * @param User $user
      */
     public function removeUser(User $user)
     {
+        if(!$this->users->contains($user)){
+            return;
+        }
         $this->users->removeElement($user);
+        $user->removeEvent($this);
     }
+
     /**
      * @return User[]
      */

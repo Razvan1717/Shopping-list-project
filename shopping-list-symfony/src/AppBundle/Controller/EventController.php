@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Event;
 use AppBundle\Entity\User;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -54,7 +55,7 @@ class EventController extends Controller
             /** @var Event $event */
             $event = $form->getData();
             foreach($event->getUsers() as $selectedUser){
-                $selectedUser->addUserEvent($event);
+                $selectedUser->addEvent($event);
                 $em->persist($selectedUser);
             }
             $em->persist($event);
@@ -123,7 +124,7 @@ class EventController extends Controller
                 /** @var Event $event */
                 $event = $editForm->getData();
                 foreach ($event->getUsers() as $selectedUser) {
-                    $selectedUser->addUserEvent($event);
+                    $selectedUser->addEvent($event);
                     $em->persist($selectedUser);
                 }
                 $em->persist($event);
@@ -165,38 +166,32 @@ class EventController extends Controller
     /**
      * Deletes users from an event .
      *
-     * @Route("/{id}/{user}", name="user_detele_from_event")
+     * @Route("/{event}/{user}", name="user_detele_from_event")
      * @Method("DELETE")
      */
     public function deleteUserAction(Request $request, Event $event, User $user)
     {
+
        $em = $this->getDoctrine()->getManager();
-       $repo = $em->getRepository('AppBundle:User');
-       $myEvent = $em->getRepository('AppBundle:Event')->find($event);
-       $query = $repo->createQueryBuilder('u')
-           ->innerJoin('u.events', 'e')
-           ->where('e.id = :event_id')
-           ->andWhere('u.id = :user_id')
-           ->setParameter('user_id', $user)
-           ->setParameter('event_id', $event)
-           ->getQuery()->getResult();
 
+//       $query = $repo->createQueryBuilder('u')
+//           ->innerJoin('u.events', 'e')
+//           ->where('e.id = :event_id')
+//           ->andWhere('u.id = :user_id')
+//           ->setParameter('user_id', $user)
+//           ->setParameter('event_id', $event)
+//           ->getQuery()->getResult();
 
-        foreach($query as $key=>$value){
-            if($value){
-                dump($value);
-            }
-            else{
-                echo 'nu';
-            }
-        }
-        die();
-           $myEvent->removeUser($query);
-           $em->persist($myEvent);
-           $em->flush();
-//       dump($query);
-die();
-//        return $this->redirectToRoute('event_show');
+        $user->removeEvent($event);
+        $event->removeUser($user);
+
+        $em->persist($user);
+        $em->persist($event);
+
+        $em->flush();
+
+        return $this->redirectToRoute('event_show', array('id' => $event->getId()));
+
     }
 
     /**
